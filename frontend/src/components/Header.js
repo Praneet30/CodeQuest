@@ -12,7 +12,7 @@ const Header = () => {
         </Link>
         <ul className="flex space-x-20 ml-20">
           <li>
-              <Link to={""} className="text-base md:text-lg font-semibold hover:text-red-500 hover:text-lg">Home</Link>
+              <Link to={"/"} className="text-base md:text-lg font-semibold hover:text-red-500 hover:text-lg">Home</Link>
               </li>
               <li>
               <Link to={""} className="text-base md:text-lg hover:text-red-500 font-semibold">Problems</Link>
@@ -21,6 +21,7 @@ const Header = () => {
               <Link to={""} className="text-base md:text-lg hover:text-red-500 font-semibold">IDE</Link>
               </li>
               <li>
+              <Link to={""} className="text-base md:text-lg hover:text-red-500 font-semibold">Leaderboard</Link>
               </li>
               </ul>
               <div className="ml-auto flex space-x-12">

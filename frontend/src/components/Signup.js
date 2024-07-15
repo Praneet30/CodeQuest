@@ -1,7 +1,7 @@
 import Header from './Header';
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import signupimage from '../signupimage3.png';
+import signupimage from '../signup.png';
 import axios from 'axios';
 import { toast } from 'sonner';
 import { backendurl } from '../backendurl';
