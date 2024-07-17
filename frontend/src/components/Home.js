@@ -1,12 +1,22 @@
 import React from "react";
 import Header from "./Header";
 import image from "../Home1.png";
+import { AuthContext } from "../providers/authProvider";
+import { Link } from "react-router-dom";
+import { useContext } from "react";
+
 
 const Home = () => {
+
+  var isloggedin=false;
+  
+  const authData=useContext(AuthContext);
+  if(authData.authData != null)
+    isloggedin=true;
   return (
     <>
       <Header></Header>
-      <section className="bg-gray-100 pt-10 pb-10 min-h-screen">
+      <section className="bg-gray-100 pt-10 pb-20 min-h-screen">
         <div className="container mx-auto p-4 md:p-10 flex flex-col md:flex-row items-center ">
           <div className="md:w-1/2 ml-5 text-center md:text-left">
             <h1 className=" text-4xl text-red-500 font-bold mb-5">
@@ -18,9 +28,11 @@ const Home = () => {
               with a vibrant community dedicated to advancing your coding
               journey.
             </p>
+            <Link to={isloggedin?"/":"/login"} >
             <button className="bg-red-500 text-white mt-10 px-6 py-3 rounded-md hover:bg-red-600 transition duration-300">
               Join Now
             </button>
+            </Link>
           </div>
           <div className="md:w-1/2 ml-20">
             <img
@@ -89,15 +101,16 @@ const Home = () => {
             </div>
           </div>
           </section>
-          {/* <div className="container mx-auto px-4">
+          <section className="pb-20 bg-gray-100 -mt-30">
+          <div className="container mx-auto px-2">
     
-          <div className="flex flex-wrap items-center mt-32">
+          <div className="flex flex-wrap items-center">
             <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
               <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-gray-100">
                 <i className="fas fa-user-friends text-xl"></i>
               </div>
-              <h3 className="text-3xl mb-2 font-semibold leading-normal">
-                Working with us is a pleasure
+              <h3 className="text-2xl mb-2 font-semibold leading-normal">
+              Comprehensive Performance Metrics
               </h3>
               <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
                 Don't let your uses guess by attaching tooltips and popoves to
@@ -117,8 +130,8 @@ const Home = () => {
               </a>
             </div>
 
-            <div className="w-full md:w-4/12 px-4 mr-auto ml-auto">
-              <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-pink-600">
+            <div className="w-full md:w-4/12 px-4 mr-auto mt-10 ml-auto">
+              <div className="relative flex flex-col min-w-0 break-words bg-white w-full mb-6 shadow-lg rounded-lg bg-red-500">
                 <img
                   alt="..."
                   src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1051&q=80"
@@ -137,13 +150,13 @@ const Home = () => {
                   >
                     <polygon
                       points="-30,95 583,95 583,65"
-                      className="text-pink-600 fill-current"
+                      className="text-red-600 fill-current"
                     ></polygon>
                   </svg>
-                  <h4 className="text-xl font-bold text-white">
+                  <h4 className="text-xl font-bold text-black">
                     Top Notch Services
                   </h4>
-                  <p className="text-md font-light mt-2 text-white">
+                  <p className="text-md font-light mt-2 text-black">
                     The Arctic Ocean freezes every winter and much of the
                     sea-ice then thaws every summer, and that process will
                     continue whatever happens.
@@ -152,8 +165,8 @@ const Home = () => {
               </div>
             </div>
           </div>
-          </div> */}
-      
+          </div> 
+      </section>
       
       <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6">

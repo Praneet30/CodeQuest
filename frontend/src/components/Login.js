@@ -66,15 +66,6 @@ function Login() {
     
   };
   
-
-  const goToRegister = () => {
-    navigate("/signup")
-  };
-
-  const handleGoogleLogin = () => {
-    console.log('Continue with Google clicked');
-  };
-
   return (
     <>
     <Header />
