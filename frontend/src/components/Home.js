@@ -5,18 +5,15 @@ import { AuthContext } from "../providers/authProvider";
 import { Link } from "react-router-dom";
 import { useContext } from "react";
 
-
 const Home = () => {
+  var isloggedin = false;
 
-  var isloggedin=false;
-  
-  const authData=useContext(AuthContext);
-  if(authData.authData != null)
-    isloggedin=true;
+  const authData = useContext(AuthContext);
+  if (authData.authData != null) isloggedin = true;
   return (
     <>
       <Header></Header>
-      <section className="bg-gray-100 pt-10 pb-20 min-h-screen">
+      <section className="bg-gray-100 pt-10 pb-20 min-h-screen ">
         <div className="container mx-auto p-4 md:p-10 flex flex-col md:flex-row items-center ">
           <div className="md:w-1/2 ml-5 text-center md:text-left">
             <h1 className=" text-4xl text-red-500 font-bold mb-5">
@@ -28,10 +25,10 @@ const Home = () => {
               with a vibrant community dedicated to advancing your coding
               journey.
             </p>
-            <Link to={isloggedin?"/":"/login"} >
-            <button className="bg-red-500 text-white mt-10 px-6 py-3 rounded-md hover:bg-red-600 transition duration-300">
-              Join Now
-            </button>
+            <Link to={isloggedin ? "/" : "/login"}>
+              <button className="bg-red-500 text-white mt-10 px-6 py-3 rounded-md hover:bg-red-600 transition duration-300">
+                Join Now
+              </button>
             </Link>
           </div>
           <div className="md:w-1/2 ml-20">
@@ -93,41 +90,38 @@ const Home = () => {
                   </div>
                   <h6 className="text-xl font-semibold">Leaderboard</h6>
                   <p className="mt-2 mb-4 text-gray-600">
-                  Encourages learning through competition, enhances problem-solving skills, and provides opportunities to gain recognition and rewards.
+                    Encourages learning through competition, enhances
+                    problem-solving skills, and provides opportunities to gain
+                    recognition and rewards.
                   </p>
                 </div>
               </div>
             </div>
-            </div>
           </div>
-          </section>
-          <section className="pb-20 bg-gray-100 -mt-30">
-          <div className="container mx-auto px-2">
-    
+        </div>
+      </section>
+      <section className="pb-20 bg-gray-100 -mt-30">
+        <div className="container mx-auto px-2">
           <div className="flex flex-wrap items-center">
             <div className="w-full md:w-5/12 px-4 mr-auto ml-auto">
               <div className="text-gray-600 p-3 text-center inline-flex items-center justify-center w-16 h-16 mb-6 shadow-lg rounded-full bg-gray-100">
                 <i className="fas fa-user-friends text-xl"></i>
               </div>
               <h3 className="text-2xl mb-2 font-semibold leading-normal">
-              Comprehensive Performance Metrics
+                Comprehensive Performance Metrics
               </h3>
               <p className="text-lg font-light leading-relaxed mt-4 mb-4 text-gray-700">
-                Don't let your uses guess by attaching tooltips and popoves to
-                any element. Just make sure you enable them first via
-                JavaScript.
+                Track your scores across various challenges and earn badges for
+                special achievements and milestones.See where you stand among
+                peers with real-time rankings based on problem-solving
+                efficiency and accuracy.
               </p>
               <p className="text-lg font-light leading-relaxed mt-0 mb-4 text-gray-700">
                 The kit comes with three pre-built pages to help you get started
                 faster. You can change the text and images and you're good to
                 go. Just make sure you enable them first via JavaScript.
               </p>
-              <a
-                href="https://www.creative-tim.com/learning-lab/tailwind-starter-kit#/presentation"
-                className="font-bold text-gray-800 mt-8"
-              >
-                Check Tailwind Starter Kit!
-              </a>
+              
             </div>
 
             <div className="w-full md:w-4/12 px-4 mr-auto mt-10 ml-auto">
@@ -157,17 +151,17 @@ const Home = () => {
                     Top Notch Services
                   </h4>
                   <p className="text-md font-light mt-2 text-black">
-                    The Arctic Ocean freezes every winter and much of the
-                    sea-ice then thaws every summer, and that process will
-                    continue whatever happens.
+                  Provides a wide range of problems for all skill levels and
+                    various topics to enhance your coding skills and prepare for
+                    interviews.
                   </p>
                 </blockquote>
               </div>
             </div>
           </div>
-          </div> 
+        </div>
       </section>
-      
+
       <footer class="bg-gray-800 text-white py-8">
         <div class="container mx-auto px-6">
           <div class="flex flex-col md:flex-row justify-between items-center">

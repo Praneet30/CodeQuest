@@ -44,7 +44,7 @@ const Header = () => {
               to={isLoggedIn ? "/ide" : "/login"}
               className="text-base md:text-lg hover:text-red-500 font-semibold"
             >
-              IDE
+              Code
             </Link>
           </li>
           <li>
@@ -73,13 +73,16 @@ const Header = () => {
               </Link>
             </>
           ) : (
+            
             <>
+             
              <Link
                 to="/profile"
                 className="text-base md:text-lg mr-4 hover:text-red-500 font-semibold"
               >
                 Profile
               </Link>
+            
               <Link to="/"
               className="text-base md:text-lg hover:text-red-500 font-semibold ">
               <button

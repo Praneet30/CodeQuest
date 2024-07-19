@@ -35,27 +35,32 @@ function Login() {
     if (validateForm()) {
       setLoading(true);
       try {
-        console.log(`${backendurl}/login`)
+        console.log(`${backendurl}/auth/login`);
         const response = await axios.post(`${backendurl}/auth/login`, { email, password });
         console.log(response.data);
-        
+  
         if (response.data.success === false) {
           setServerResponse('Invalid credentials');
           toast.error("Invalid credentials");
           return;
         }
-        
-        const { user, token,role } = response.data;
-        console.log(role)
-        
-        login(user, token,role);
+  
+        const { user, token, role } = response.data;
+        console.log(role);
+  
+        login(user, token, role);
         toast.success('Login successful');
-        navigate("/");
+  
+        if (role === 'admin') {
+          navigate("/admin");
+        } else {
+          navigate("/");
+        }
       } catch (error) {
         console.error('Login error:', error);
         if (error.response && error.response.data && error.response.data.message) {
           setServerResponse(error.response.data.message);
-       
+          toast.error(error.response.data.message);
         } else {
           setServerResponse('An error occurred. Please try again.');
           toast.error('An error occurred. Please try again.');
@@ -63,8 +68,8 @@ function Login() {
       }
       setLoading(false);
     }
-    
   };
+  
   
   return (
     <>

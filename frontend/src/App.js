@@ -8,6 +8,8 @@ import Problems from './components/Problems';
 import Ide from './components/Ide';
 import Leaderboard from './components/Leaderboard';
 import Profile from './components/Profile';
+import Admin from './components/Admin';
+import Manageusers from './components/Manageusers'
 
 function App() {
   const router=createBrowserRouter(
@@ -45,6 +47,14 @@ function App() {
               path: '/profile',
                 element: <Profile></Profile>
           
+              },
+              {
+                path:'/admin',
+                element: <Admin></Admin>
+              },
+              {
+                path:'/manageusers',
+                element:<Manageusers></Manageusers>
               }
   ]
   )

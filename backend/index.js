@@ -5,6 +5,8 @@ const dotenv = require("dotenv").config()
 
 const authroutes=require('./routes/authroutes');
 const userRoutes=require('./routes/userroutes');
+const adminRoutes = require('./routes/adminroutes');
+const problemRoutes = require('./routes/problemsroutes')
 
 const app = express();
 app.use(cors());
@@ -26,6 +28,9 @@ app.get("/",(req,res)=>{
 
 app.use('/auth', authroutes);
 app.use("/user",userRoutes);
+app.use('/admin',adminRoutes);
+app.use('/problem',problemRoutes);
+
 
 
 app.listen(PORT,()=>console.log("server is running at port : "+PORT))
