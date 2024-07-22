@@ -1,5 +1,6 @@
 const mongoose = require("mongoose");
 const User = require("../models/userschema");
+const Problem = require("../models/problems_model");
 
 
 // get all users data for admin
@@ -69,7 +70,70 @@ const updateUser = async (req, res) => {
       });
     }
   };
+  const getProblems = async (req, res) => {
+    try {
+      const problems = await Problem.find();
+      res.status(200).json(problems);
+    
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  const getProblemById = async (req, res) => {
+    try {
+      const problem = await Problem.findById(req.params.id);
+      if (!problem) {
+        return res.status(404).json({ error: 'Problem not found' });
+      }
+      res.status(200).json(problem);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  };
+  
+  
+  const updateProblem = async (req, res) => {
+    try {
+      const updates = { ...req.body };
+  
+      // Remove file fields from updates to keep them unchanged
+      delete updates.inputFile;
+      delete updates.outputFile;
+  
+      const updatedProblem = await Problem.findByIdAndUpdate(req.params.id, updates, { new: true });
+      if (!updatedProblem) {
+        return res.status(404).json({ error: 'Problem not found' });
+      }
+      res.status(200).json(updatedProblem);
+      console.log("hi")
+    } catch (error) {
+      res.status(400).json({ error: error.message });
+    }
+  };
+  
+  const deleteProblem = async (req, res) => {
+    const { id } = req.params;
+    
+    try {
+      const result = await Problem.findByIdAndDelete(id);
+  
+      if (!result) {
+        return res.status(404).json({ message: 'Problem not found' });
+      }
+  
+      res.status(200).json({ message: 'Problem deleted successfully' });
+    } catch (error) {
+      console.error('Error deleting problem:', error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  };
+  
+  
   
 
 
-module.exports = { manageusers, updateUser,deleteUser };
+module.exports = { manageusers, updateUser,deleteUser ,getProblems,
+  getProblemById,
+  updateProblem,
+  deleteProblem,};

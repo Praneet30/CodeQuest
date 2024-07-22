@@ -10,6 +10,9 @@ import Leaderboard from './components/Leaderboard';
 import Profile from './components/Profile';
 import Admin from './components/Admin';
 import Manageusers from './components/Manageusers'
+import AddProblem from './components/AddProblem';
+import AllQuestions from './components/AllQuestions';
+import SingleProblem from './components/SingleProblem';
 
 function App() {
   const router=createBrowserRouter(
@@ -55,6 +58,18 @@ function App() {
               {
                 path:'/manageusers',
                 element:<Manageusers></Manageusers>
+              },
+              {
+                path:"/addproblem",
+                element:<AddProblem></AddProblem>
+              },
+              {
+                path:"/allquestions",
+                element:<AllQuestions></AllQuestions>,
+              },
+              {
+                path:'/problem/:id',
+                element:<SingleProblem></SingleProblem>
               }
   ]
   )

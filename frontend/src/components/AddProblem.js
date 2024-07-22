@@ -1,47 +1,38 @@
-import React, { useState, useContext } from 'react';
-import axios from 'axios';
+import React, { useState, useContext } from "react";
+import axios from "axios";
 import { AuthContext } from "../providers/authProvider";
-import ReactQuill from 'react-quill';
-import 'react-quill/dist/quill.snow.css';
-import katex from 'katex';
-import 'katex/dist/katex.min.css';
-import Navbar from './Navbar';
-import { backendurl } from '../backendurl.js';
-import {useNavigate} from 'react-router-dom'
-window.katex = katex;
+import { backendurl } from "../backendurl.js";
+import { useNavigate } from "react-router-dom";
+import AdminHeader from "./AdminHeader.js";
+
 const AddProblem = () => {
   const [problemData, setProblemData] = useState({
-    title: '',
-    description: '',
-    difficulty: 'easy',
-    constraints: '',
-    inputFormat: '',
-    outputFormat: '',
-    sampleTestCases: [{ input: '', output: '', explanation: '' }],
-    topicTags: [''],
-    companyTags: [''],
+    title: "",
+    description: "",
+    difficulty: "easy",
+    constraints: "",
+    inputFormat: "",
+    outputFormat: "",
+    sampleTestCases: [{ input: "", output: "", explanation: "" }],
+    topicTags: [""],
+    companyTags: [""],
     inputFile: null,
     outputFile: null,
   });
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   const authData = useContext(AuthContext);
-  
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setProblemData({ ...problemData, [name]: value });
   };
 
-  const handleEditorChange = (name, value) => {
-    setProblemData({ ...problemData, [name]: value });
-  };
-
   const handleArrayChange = (e, index, field, arrayName) => {
     const newArray = [...problemData[arrayName]];
-    if (field === 'tag') {
-      newArray[index] = e.target.value;
+    if (arrayName === "sampleTestCases") {
+      newArray[index] = { ...newArray[index], [field]: e.target.value };
     } else {
-      newArray[index][field] = e.target.value;
+      newArray[index] = e.target.value;
     }
     setProblemData({ ...problemData, [arrayName]: newArray });
   };
@@ -49,12 +40,18 @@ const AddProblem = () => {
   const handleAddSampleTestCase = () => {
     setProblemData({
       ...problemData,
-      sampleTestCases: [...problemData.sampleTestCases, { input: '', output: '', explanation: '' }],
+      sampleTestCases: [
+        ...problemData.sampleTestCases,
+        { input: "", output: "", explanation: "" },
+      ],
     });
   };
 
   const handleAddTag = (arrayName) => {
-    setProblemData({ ...problemData, [arrayName]: [...problemData[arrayName], ''] });
+    setProblemData({
+      ...problemData,
+      [arrayName]: [...problemData[arrayName], ""],
+    });
   };
 
   const handleRemoveTag = (index, arrayName) => {
@@ -70,264 +67,272 @@ const AddProblem = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    let userid=authData.authData.user._id;
-     const data={
-      title: problemData.title,
-      description: problemData.description,
-      difficulty: problemData.difficulty,
-      constraints: problemData.constraints,
-      inputFormat: problemData.inputFormat,
-      outputFormat: problemData.outputFormat,
-      sampleTestCases: problemData.sampleTestCases,
-      topicTags: problemData.topicTags,
-      companyTags: problemData.companyTags,
-      inputFile: problemData.inputFile,
-      outputFile: problemData.outputFile,
-      userid:userid  
-      
-     }
-     console.log(problemData.inputFile)
+    let userid = authData.authData.user._id;
+    const formData = new FormData();
+    formData.append("title", problemData.title);
+    formData.append("description", problemData.description);
+    formData.append("difficulty", problemData.difficulty);
+    formData.append("constraints", problemData.constraints);
+    formData.append("inputFormat", problemData.inputFormat);
+    formData.append("outputFormat", problemData.outputFormat);
+
+    // Append sample test cases as an array
+    problemData.sampleTestCases.forEach((testCase, index) => {
+        formData.append(`sampleTestCases[${index}][input]`, testCase.input);
+        formData.append(`sampleTestCases[${index}][output]`, testCase.output);
+        formData.append(`sampleTestCases[${index}][explanation]`, testCase.explanation);
+    });
+
+    // Append topic tags as an array
+    problemData.topicTags.forEach((tag, index) => {
+        formData.append(`topicTags[${index}]`, tag);
+    });
+
+    // Append company tags as an array
+    problemData.companyTags.forEach((tag, index) => {
+        formData.append(`companyTags[${index}]`, tag);
+    });
+
+    formData.append("inputFile", problemData.inputFile);
+    formData.append("outputFile", problemData.outputFile);
+    formData.append("userid", userid);
+
     try {
-      const response = await axios.post(`${backendurl}/coding/addproblem`, data, { headers: { 
-        'Content-Type': 'multipart/form-data',
-      } });
-      console.log(response)
-      if (response.status === 201) {
-        setProblemData({
-          title: '',
-          description: '',
-          difficulty: 'easy',
-          constraints: '',
-          inputFormat: '',
-          outputFormat: '',
-          sampleTestCases: [{ input: '', output: '', explanation: '' }],
-          topicTags: [''],
-          companyTags: [''],
-          inputFile: null,
-          outputFile: null,
+        const response = await axios.post(`${backendurl}/problem/addproblem`, formData, {
+            headers: {
+                "Content-Type": "multipart/form-data",
+            },
         });
-        navigate("/allquestions")
-      }
+        if (response.status === 201) {
+            setProblemData({
+                title: "",
+                description: "",
+                difficulty: "easy",
+                constraints: "",
+                inputFormat: "",
+                outputFormat: "",
+                sampleTestCases: [{ input: "", output: "", explanation: "" }],
+                topicTags: [""],
+                companyTags: [""],
+                inputFile: null,
+                outputFile: null,
+            });
+            navigate("/admin");
+        }
     } catch (error) {
-      console.error('Error adding problem:', error);
+        console.error("Error adding problem:", error);
     }
-  };
+};
 
-  const modules = {
-    toolbar: [
-      [{ header: [1, 2, 3, 4, 5, 6, false] }],
-      [{ font: [] }],
-      [{ size: [] }],
-      ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-      [{ list: 'ordered' }, { list: 'bullet' }],
-      [{ color: [] }, { background: [] }],
-      ['link'],
-      ['code-block'],
-      ['formula'],
-      ['clean'],
-    ],
-  };
-
-  const formats = [
-    'header', 'font', 'size', 'bold', 'italic', 'underline', 'strike', 'blockquote',
-    'list', 'bullet', 'color', 'background', 'link', 'code-block', 'formula',
-  ];
 
   return (
     <>
-     
-      <Navbar/>
-      <div className="container mx-auto px-4 py-8 ">
-        <h1 className="text-4xl font-bold mb-6 text-yellow-800">Add a New Problem</h1>
-        <form onSubmit={handleSubmit} encType='multipart/form-data'  className="p-6 rounded shadow-md">
-          <div className="mb-4">
-            <label className="block text-yellow-700 font-bold mb-2">Title</label>
-            <input
-              type="text"
-              name="title"
-              value={problemData.title}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-yellow-400 rounded"
-              required
-            />
-          </div>
-          <div className="mb-8">
-            <label className="block text-yellow-700 font-bold mb-2">Description</label>
-            <ReactQuill
-              theme="snow"
-              value={problemData.description}
-              onChange={(value) => handleEditorChange('description', value)}
-              modules={modules}
-              formats={formats}
-              className="h-64 mb-2"
-            />
-          </div>
-          <div className="mb-4 mt-20">
-            <label className="block text-yellow-700 font-bold mb-2">Difficulty</label>
-            <select
-              name="difficulty"
-              value={problemData.difficulty}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-yellow-400 rounded"
-              required
+      <div className="flex">
+        <AdminHeader className="flex-shrink-0 w-64" />
+        <div className="flex-grow p-4">
+          <div className="container mx-auto max-w-2xl">
+            <h1 className="text-3xl font-bold mb-6 text-black">Add a New Problem</h1>
+            <form
+              onSubmit={handleSubmit}
+              encType="multipart/form-data"
+              className="bg-white p-6 rounded shadow-md border border-black-300"
             >
-              <option value="easy">Easy</option>
-              <option value="medium">Medium</option>
-              <option value="hard">Hard</option>
-            </select>
-          </div>
-          <div className="mb-8">
-            <label className="block text-yellow-700 font-bold mb-2">Constraints</label>
-            <ReactQuill
-              theme="snow"
-              value={problemData.constraints}
-              onChange={(value) => handleEditorChange('constraints', value)}
-              modules={modules}
-              formats={formats}
-              className="h-30 mb-2"
-            />
-          </div>
-          <div className="mb-8">
-            <label className="block text-yellow-700 font-bold mb-2">Input Format</label>
-            <ReactQuill
-              theme="snow"
-              value={problemData.inputFormat}
-              onChange={(value) => handleEditorChange('inputFormat', value)}
-              modules={modules}
-              formats={formats}
-              className="h-30 mb-2"
-            />
-          </div>
-          <div className="mb-8">
-            <label className="block text-yellow-700 font-bold mb-2">Output Format</label>
-            <ReactQuill
-              theme="snow"
-              value={problemData.outputFormat}
-              onChange={(value) => handleEditorChange('outputFormat', value)}
-              modules={modules}
-              formats={formats}
-              className="h-30 mb-2"
-            />
-          </div>
-          <div className="mb-8">
-            <label className="block text-yellow-700 font-bold mb-2">Sample Test Cases</label>
-            {problemData.sampleTestCases.map((testCase, index) => (
-              <div key={index} className="mb-4 bg-yellow-100 p-3 rounded">
-                <textarea
-                  placeholder="Input"
-                  value={testCase.input}
-                  onChange={(e) => handleArrayChange(e, index, 'input', 'sampleTestCases')}
-                  className="w-full px-3 py-2 border border-yellow-400 rounded mb-2"
-                  required
-                />
-                <textarea
-                  placeholder="Output"
-                  value={testCase.output}
-                  onChange={(e) => handleArrayChange(e, index, 'output', 'sampleTestCases')}
-                  className="w-full px-3 py-2 border border-yellow-400 rounded mb-2"
-                  required
-                />
-                <textarea
-                  placeholder="Explanation"
-                  value={testCase.explanation}
-                  onChange={(e) => handleArrayChange(e, index, 'explanation', 'sampleTestCases')}
-                  className="w-full px-3 py-2 border border-yellow-400 rounded mb-2"
-                />
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={handleAddSampleTestCase}
-              className="px-4 py-2 bg-yellow-600 text-white rounded"
-            >
-              Add Another Test Case
-            </button>
-          </div>
-          <div className="mb-4">
-            <label className="block text-yellow-700 font-bold mb-2">Topic Tags</label>
-            {problemData.topicTags.map((tag, index) => (
-              <div key={index} className="mb-2 flex">
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Title</label>
                 <input
                   type="text"
-                  value={tag}
-                  onChange={(e) => handleArrayChange(e, index, 'tag', 'topicTags')}
-                  className="w-full px-3 py-2 border border-yellow-400 rounded"
+                  name="title"
+                  value={problemData.title}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-black-300 rounded"
                   required
                 />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Description</label>
+                <textarea
+                  name="description"
+                  value={problemData.description}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Difficulty</label>
+                <select
+                  name="difficulty"
+                  value={problemData.difficulty}
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                  required
+                >
+                  <option value="easy">Easy</option>
+                  <option value="medium">Medium</option>
+                  <option value="hard">Hard</option>
+                </select>
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Constraints</label>
+                <textarea
+                  name="constraints"
+                  value={problemData.constraints}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Input Format</label>
+                <textarea
+                  name="inputFormat"
+                  value={problemData.inputFormat}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Output Format</label>
+                <textarea
+                  name="outputFormat"
+                  value={problemData.outputFormat}
+                  onChange={handleInputChange}
+                  rows="4"
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Sample Test Cases</label>
+                {problemData.sampleTestCases.map((testCase, index) => (
+                  <div key={index} className="mb-4 bg-gray-100 p-4 rounded border border-gray-300">
+                    <textarea
+                      placeholder="Input"
+                      value={testCase.input}
+                      onChange={(e) =>
+                        handleArrayChange(e, index, "input", "sampleTestCases")
+                      }
+                      className="w-full px-3 py-2 border border-black-300 rounded mb-2"
+                      required
+                    />
+                    <textarea
+                      placeholder="Output"
+                      value={testCase.output}
+                      onChange={(e) =>
+                        handleArrayChange(e, index, "output", "sampleTestCases")
+                      }
+                      className="w-full px-3 py-2 border border-black-300 rounded mb-2"
+                      required
+                    />
+                    <textarea
+                      placeholder="Explanation"
+                      value={testCase.explanation}
+                      onChange={(e) =>
+                        handleArrayChange(e, index, "explanation", "sampleTestCases")
+                      }
+                      className="w-full px-3 py-2 border border-black-300 rounded mb-2"
+                    />
+                  </div>
+                ))}
                 <button
                   type="button"
-                  onClick={() => handleRemoveTag(index, 'topicTags')}
-                  className="ml-2 px-3 py-2 bg-red-500 text-white rounded"
+                  onClick={handleAddSampleTestCase}
+                  className="px-4 py-2 bg-black text-white rounded"
                 >
-                  Remove
+                  Add Another Test Case
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => handleAddTag('topicTags')}
-              className="px-4 py-2 bg-yellow-600 text-white rounded"
-            >
-              Add Another Tag
-            </button>
-          </div>
-          <div className="mb-4">
-            <label className="block text-yellow-700 font-bold mb-2">Company Tags</label>
-            {problemData.companyTags.map((tag, index) => (
-              <div key={index} className="mb-2 flex">
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Topic Tags</label>
+                {problemData.topicTags.map((tag, index) => (
+                  <div key={index} className="mb-2 flex items-center">
+                    <input
+                      type="text"
+                      value={tag}
+                      onChange={(e) =>
+                        handleArrayChange(e, index, "tag", "topicTags")
+                      }
+                      className="w-full px-3 py-2 border border-black-300 rounded"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(index, "topicTags")}
+                      className="ml-2 px-3 py-2 bg-red-500 text-white rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handleAddTag("topicTags")}
+                  className="px-4 py-2 bg-black text-white rounded"
+                >
+                  Add Another Tag
+                </button>
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Company Tags</label>
+                {problemData.companyTags.map((tag, index) => (
+                  <div key={index} className="mb-2 flex items-center">
+                    <input
+                      type="text"
+                      value={tag}
+                      onChange={(e) =>
+                        handleArrayChange(e, index, "tag", "companyTags")
+                      }
+                      className="w-full px-3 py-2 border border-black-300 rounded"
+                      required
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveTag(index, "companyTags")}
+                      className="ml-2 px-3 py-2 bg-red-500 text-white rounded"
+                    >
+                      Remove
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  onClick={() => handleAddTag("companyTags")}
+                  className="px-4 py-2 bg-black text-white rounded"
+                >
+                  Add Another Tag
+                </button>
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Input File</label>
                 <input
-                  type="text"
-                  value={tag}
-                  onChange={(e) => handleArrayChange(e, index, 'tag', 'companyTags')}
-                  className="w-full px-3 py-2 border border-yellow-400 rounded"
+                  type="file"
+                  name="inputFile"
+                  onChange={handleFileChange}
+                  className="w-full px-3 py-2 border border-black-300 rounded"
                   required
                 />
+              </div>
+              <div className="mb-4">
+                <label className="block text-black font-bold mb-2">Output File</label>
+                <input
+                  type="file"
+                  name="outputFile"
+                  onChange={handleFileChange}
+                  className="w-full px-3 py-2 border border-black-300 rounded"
+                  required
+                />
+              </div>
+              <div className="flex justify-center">
                 <button
-                  type="button"
-                  onClick={() => handleRemoveTag(index, 'companyTags')}
-                  className="ml-2 px-3 py-2 bg-red-500 text-white rounded"
+                  type="submit"
+                  className="px-4 py-2 bg-black text-white rounded"
                 >
-                  Remove
+                  Submit
                 </button>
               </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => handleAddTag('companyTags')}
-              className="px-4 py-2 bg-yellow-600 text-white rounded"
-            >
-              Add Another Tag
-            </button>
+            </form>
           </div>
-          <div className="mb-4">
-            <label className="block text-yellow-700 font-bold mb-2">Input File</label>
-            <input
-              type="file"
-              name="inputFile"
-              onChange={handleFileChange}
-              className="w-full px-3 py-2 border border-yellow-400 rounded"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-yellow-700 font-bold mb-2">Output File</label>
-            <input
-              type="file"
-              name="outputFile"
-              onChange={handleFileChange}
-              className="w-full px-3 py-2 border border-yellow-400 rounded"
-              required
-            />
-          </div>
-          <div>
-            <button
-              type="submit"
-              className="px-4 py-2 bg-yellow-600 text-white rounded"
-            >
-              Submit
-            </button>
-          </div>
-        </form>
+        </div>
       </div>
     </>
   );

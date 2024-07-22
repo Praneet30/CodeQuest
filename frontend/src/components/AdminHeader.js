@@ -5,7 +5,7 @@ import { toast } from 'sonner';
 import { AuthContext } from '../providers/authProvider';
 import { useContext } from 'react';
 
-const AdminNav = () => {
+const AdminHeader = () => {
   const navigate = useNavigate();
   const authData = useContext(AuthContext);
 
@@ -59,4 +59,4 @@ const NavLink = ({ to, children, className }) => {
   );
 };
 
-export default AdminNav;
+export default AdminHeader;
