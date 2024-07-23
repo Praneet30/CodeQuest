@@ -14,5 +14,7 @@ router.post("/runproblem", verifyToken, problemController.runproblem_post);
 router.post('/addproblem', upload.fields([{ name: 'inputFile' }, { name: 'outputFile' }]), problemController.addproblem_post);
 router.get('/getproblems', problemController.getProblems);
 router.get("/getproblem/:id", problemController.singleproblem_get);
+router.post("/submit", verifyToken, problemController.submit_post);
+router.get("/usersubmissions/:problemid/:userid", problemController.user_submissions_get);
 
 module.exports = router;

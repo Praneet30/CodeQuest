@@ -2,7 +2,7 @@ const express = require("express")
 const cors = require("cors")
 const mongoose = require("mongoose")
 const dotenv = require("dotenv").config()
-
+const path = require('path');
 const authroutes=require('./routes/authroutes');
 const userRoutes=require('./routes/userroutes');
 const adminRoutes = require('./routes/adminroutes');
@@ -12,6 +12,11 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+// Serve static files from the 'public' directory
+app.use(express.static(path.join(__dirname, 'public')));
+
+// Serve uploaded files from the 'uploads' directory
+app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
 const PORT = process.env.PORT || 8080
 
