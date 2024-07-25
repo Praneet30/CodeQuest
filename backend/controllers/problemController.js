@@ -177,7 +177,8 @@ const submit_post = async (req, res) => {
     if (!question) {
       return res.status(404).json({ error: "Question not found" });
     }
-    // question.submissionsCount+=1;
+    question.submissionsCount+=1;
+    await question.save();
    
     const sampleTestCases = question.sampleTestCases;
 

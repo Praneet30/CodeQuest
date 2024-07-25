@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const User = require("../models/userschema");
 const Problem = require("../models/problems_model");
+const Submission = require("../models/submission_model");
 
 
 // get all users data for admin
@@ -129,11 +130,37 @@ const updateUser = async (req, res) => {
     }
   };
   
+  const get_submissions = async (req, res) => {
+    try {
+      const submissions = await Submission.find()
+        .populate({
+          path: 'userid',
+          select: 'username',  // Specify which fields to select from User model
+        })
+        .populate({
+          path: 'problemid',
+          select: 'title',  // Specify which fields to select from Problem model
+        });
+  
+      res.status(200).json({
+        success: true,
+        data: submissions,
+      });
+      // console.log(submissions.title);
+    } catch (error) {
+      console.error('Error fetching submissions:', error);
+      res.status(500).json({
+        success: false,
+        error: 'Internal Server Error',
+      });
+    }
+  };
+  
   
   
 
 
-module.exports = { manageusers, updateUser,deleteUser ,getProblems,
+module.exports = { manageusers, updateUser,deleteUser ,getProblems,get_submissions,
   getProblemById,
   updateProblem,
   deleteProblem,};

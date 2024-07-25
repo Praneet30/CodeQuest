@@ -13,6 +13,7 @@ import Manageusers from './components/Manageusers'
 import AddProblem from './components/AddProblem';
 import AllQuestions from './components/AllQuestions';
 import SingleProblem from './components/SingleProblem';
+import AllSubmissions from './components/AllSubmissions';
 
 function App() {
   const router=createBrowserRouter(
@@ -70,6 +71,10 @@ function App() {
               {
                 path:'/problem/:id',
                 element:<SingleProblem></SingleProblem>
+              },
+              {
+                path:"/allsubmissions",
+                element:<AllSubmissions></AllSubmissions>
               }
   ]
   )

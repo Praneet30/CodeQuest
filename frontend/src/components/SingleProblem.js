@@ -28,6 +28,9 @@ const SingleProblem = () => {
   const [viewMode, setViewMode] = useState("problem");
   const [selectedSubmission, setSelectedSubmission] = useState(null); // State for selected submission
   const [editorTheme, setEditorTheme] = useState("vs-dark"); // State for editor theme
+  const [testCaseResults, setTestCaseResults] = useState([]);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const authData = useContext(AuthContext);
   const isloggedin = authData.authData ? true : false;
@@ -117,17 +120,22 @@ const SingleProblem = () => {
           setError(res.data.error);
         } else {
           console.log(res.data);
-          const verdict = res.data.results.every(
-            (result) => result.verdict === "Pass"
-          )
+          const results = res.data.results;
+          setTestCaseResults(results);
+          const verdict = results.every((result) => result.verdict === "Pass")
             ? "Pass"
             : "Fail";
-          setSubmittedOutput(verdict);
+  
           if (verdict === "Fail") {
-            toast.error("Failed in some test cases");
+            const failedTestCase = results.find((result) => result.verdict === "Fail");
+            const failedIndex = results.indexOf(failedTestCase) + 1;
+            toast.error(`Failed in Test Case ${failedIndex}`);
           } else {
-            toast.success("All testcases passed");
+            toast.success("All test cases passed");
           }
+          
+          setSubmittedOutput(verdict);
+          setIsModalOpen(true);
         }
       })
       .catch((err) => {
@@ -138,7 +146,7 @@ const SingleProblem = () => {
         fetchUserSubmissions(); // Refresh user submissions after submission
       });
   };
-
+  
   const fetchUserSubmissions = async () => {
     const userId = authData.authData?.user._id;
     try {
@@ -160,7 +168,7 @@ const SingleProblem = () => {
             <div className="flex flex-col md:flex-row gap-4">
               <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
                 <div className="flex items-center justify-between mb-4">
-                  <h2 className="text-2xl font-bold text-gray-800">
+                  <h2 className="text-2xl font-bold text-gray-800 mt-5">
                     {problem.title}
                   </h2>
                   <span
@@ -315,7 +323,7 @@ const SingleProblem = () => {
                 </div>
               </div>
 
-              <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md">
+              <div className="w-full md:w-1/2 bg-white p-6 rounded-lg shadow-md mt-3">
                   <div className="flex items-center justify-between mb-4">
                   <h2 className="text-2xl font-bold text-gray-800">Editor</h2>
                   <select
@@ -353,13 +361,13 @@ const SingleProblem = () => {
                 <div className="flex items-center justify-between mt-4">
                   <button
                     onClick={runCode}
-                    className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700"
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700"
                   >
                     Run
                   </button>
                   <button
                     onClick={onSubmit}
-                    className="px-4 py-2 bg-green-600 text-white rounded-lg shadow-lg hover:bg-green-700"
+                    className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-lg hover:bg-red-700"
                   >
                     Submit
                   </button>
@@ -410,6 +418,57 @@ const SingleProblem = () => {
                 ) : (
                   submittedOutput && (
                     <>
+                      {isModalOpen && (
+        <div className="fixed inset-0 bg-gray-900 bg-opacity-75 flex justify-center items-center">
+          <div className="bg-white p-4 rounded-lg shadow-lg max-w-md w-full">
+            <h4 className="text-md font-semibold text-black mb-2">Test Case Results</h4>
+            {testCaseResults.map((result, index) => (
+              <div key={index} className="mb-4">
+                <div
+                  className={`p-2 rounded ${
+                    result.verdict === "Pass"
+                      ? "text-green-500 bg-black-200"
+                      : "text-red-500 bg-black"
+                  }`}
+                >
+                  Test Case {index + 1}: {result.verdict}
+                </div>
+                {result.verdict === "Fail" && (
+                  <div className="text-black bg-gray-200 mt-2">
+                    <div>Input: {result.input}</div>
+                    <div>Expected Output: {result.expectedOutput}</div>
+                    <div>Actual Output: {result.actualOutput}</div>
+                  </div>
+                )}
+              </div>
+            ))}
+            <button
+              className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
+              onClick={() => setIsModalOpen(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+       {testCaseResults.length > 0 && (
+      <div className="mt-4">
+        <h4 className="text-md font-semibold text-black mb-2">Test Case Results</h4>
+        {testCaseResults.map((result, index) => (
+          <div key={index} className="mb-2">
+            <div
+              className={`p-2 rounded ${
+                result.verdict === "Pass"
+                  ? "text-green-500 bg-gray-800"
+                  : "text-red-500 bg-gray-800"
+              }`}
+            >
+              Test Case {index + 1}: {result.verdict}
+            </div>
+          </div>
+        ))}
+      </div>
+    )}
                       <h3 className="text-lg font-semibold text-black mb-2">
                         Result
                       </h3>
