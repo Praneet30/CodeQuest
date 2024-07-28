@@ -139,14 +139,14 @@ const updateUser = async (req, res) => {
         })
         .populate({
           path: 'problemid',
-          select: 'title',  // Specify which fields to select from Problem model
-        });
+          select: 'title difficulty',
+        })
   
       res.status(200).json({
         success: true,
         data: submissions,
       });
-      // console.log(submissions.title);
+      
     } catch (error) {
       console.error('Error fetching submissions:', error);
       res.status(500).json({
@@ -155,12 +155,79 @@ const updateUser = async (req, res) => {
       });
     }
   };
+
+const get_stats =  async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const problemCount = await Problem.countDocuments();
+    const submissionCount = await Submission.countDocuments();
+   
+
+    res.json({
+      users: userCount,
+      problems: problemCount,
+      submissions: submissionCount,
+    });
+    
+  } catch (error) {
+    console.error('Error fetching stats', error);
+    res.status(500).json({ error: 'Failed to fetch stats' });
+  }
+};
   
+const get_top_users = async (req, res) => {
+  try {
+    const users = await User.find(); // Get all users
+    const userScores = [];
+
+    for (const user of users) {
+      const submissions = await Submission.find({ userid: user._id });
+
+      let totalScore = 0;
+      const countedQuestionIds = new Map();
+
+      for (const submission of submissions) {
+        const question = await Problem.findById(submission.problemid);
+        if (question && submission.verdict === 'Pass' && !countedQuestionIds.has(question._id.toString())) {
+          if (question.difficulty === 'easy') {
+            totalScore += 1;
+          } else if (question.difficulty === 'medium') {
+            totalScore += 2;
+          } else if (question.difficulty === 'hard') {
+            totalScore += 3;
+          }
+          countedQuestionIds.set(question._id.toString(), true);
+        }
+      }
+
+      userScores.push({
+        userId: user._id,
+        username: user.username,
+        totalScore,
+      });
+    }
+
+    userScores.sort((a, b) => b.totalScore - a.totalScore);
+
+    res.status(200).json({
+      success: true,
+      data: userScores,
+    });
+ 
+  } catch (error) {
+    console.error('Error fetching top users:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Internal Server Error',
+    });
+  }
+};
+
   
   
 
 
-module.exports = { manageusers, updateUser,deleteUser ,getProblems,get_submissions,
+module.exports = { manageusers, updateUser,deleteUser ,getProblems,get_submissions,get_stats,get_top_users,
   getProblemById,
   updateProblem,
   deleteProblem,};

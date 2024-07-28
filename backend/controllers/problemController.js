@@ -98,25 +98,9 @@ function executeCode(command, inputFilePath, tempCodeFilePath, res) {
 const addproblem_post = async (req, res) => {
   try {
     const { title, description, difficulty, constraints, inputFormat, outputFormat, sampleTestCases, topicTags, companyTags, userid } = req.body;
-    const { inputFile, outputFile } = req.files;
+   
 
-    console.log('req.files:', req.files);
-
-    let inputFileUrl = '';
-    let outputFileUrl = '';
-
-    if (inputFile) {
-      const inputFileData = inputFile[0];
-      console.log('inputFileData:', inputFileData);
-      inputFileUrl = `uploads/${inputFileData.filename}`;
-    }
-
-    if (outputFile) {
-      const outputFileData = outputFile[0];
-      console.log('outputFileData:', outputFileData);
-      outputFileUrl = `uploads/${outputFileData.filename}`;
-    }
-
+   
     const newProblem = new Problem({
       userid,
       title,
@@ -126,8 +110,6 @@ const addproblem_post = async (req, res) => {
       inputFormat,
       outputFormat,
       sampleTestCases,
-      inputFile: inputFileUrl,
-      outputFile: outputFileUrl,
       topicTags,
       companyTags,
     });
@@ -147,7 +129,7 @@ const getProblems = async (req, res) => {
   try {
     const problems = await Problem.find();
     res.status(200).json(problems);
-    console.log(problems);
+    // console.log(problems);
   
   } catch (error) {
     res.status(500).json({ error: error.message });

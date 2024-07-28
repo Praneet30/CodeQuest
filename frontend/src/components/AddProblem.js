@@ -93,8 +93,7 @@ const AddProblem = () => {
         formData.append(`companyTags[${index}]`, tag);
     });
 
-    formData.append("inputFile", problemData.inputFile);
-    formData.append("outputFile", problemData.outputFile);
+    
     formData.append("userid", userid);
 
     try {
@@ -302,26 +301,7 @@ const AddProblem = () => {
                   Add Another Tag
                 </button>
               </div>
-              <div className="mb-4">
-                <label className="block text-black font-bold mb-2">Input File</label>
-                <input
-                  type="file"
-                  name="inputFile"
-                  onChange={handleFileChange}
-                  className="w-full px-3 py-2 border border-black-300 rounded"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label className="block text-black font-bold mb-2">Output File</label>
-                <input
-                  type="file"
-                  name="outputFile"
-                  onChange={handleFileChange}
-                  className="w-full px-3 py-2 border border-black-300 rounded"
-                  required
-                />
-              </div>
+             
               <div className="flex justify-center">
                 <button
                   type="submit"

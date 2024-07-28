@@ -9,6 +9,7 @@ router.get('/problem/:id', adminController.getProblemById); // Added route to ge
 router.put('/updateproblem/:id', adminController.updateProblem);
 router.delete("/problem/:id",adminController.deleteProblem);
 router.get('/getsubmissions',adminController.get_submissions);
-
+router.get("/stats",adminController.get_stats);
+router.get('/topusers',adminController.get_top_users);
 module.exports=router;
 

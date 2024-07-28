@@ -13,9 +13,9 @@ const SingleProblem = () => {
   const [language, setLanguage] = useState("python");
   const [problem, setProblem] = useState(null);
   const [code, setCode] = useState({
-    python: `# Python initial code\n\n`,
-    cpp: `// C++ initial code\n\n#include <bits/stdc++.h>\nusing namespace std;\n\nint main() {\n\n  cout << "Hello World";\n\n  return 0;\n\n}`,
-    java: `// Java initial code\n\npublic class Main {\n  public static void main(String[] args) {\n\n    System.out.println("Hello World");\n\n  }\n}`,
+    python: `print("Hello, World!")`,
+    cpp: `#include <iostream>\n\nint main() {\n    std::cout << "Hello, World!" << std::endl;\n    return 0;\n}`,
+    java: `public class Main {\n    public static void main(String[] args) {\n        System.out.println("Hello, World!");\n    }\n}`,
   });
   const { id } = useParams();
   const [input, setInput] = useState("");
@@ -435,9 +435,8 @@ const SingleProblem = () => {
                 </div>
                 {result.verdict === "Fail" && (
                   <div className="text-black bg-gray-200 mt-2">
-                    <div>Input: {result.input}</div>
-                    <div>Expected Output: {result.expectedOutput}</div>
-                    <div>Actual Output: {result.actualOutput}</div>
+                    <div><b>Input:</b> {result.input}</div>
+                    <div><b>Expected Output:</b> {result.expectedOutput}  <b>Actual Output:</b> {result.actualOutput}</div>
                   </div>
                 )}
               </div>

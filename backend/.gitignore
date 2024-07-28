@@ -1,6 +1,5 @@
 node_modules
 /middleware/uploads/*
 !/middleware/uploads/.gitkeep
-/controllers/main.out
 
 .env

@@ -7,7 +7,7 @@ import AdminHeader from "./AdminHeader";
 const AllSubmissions = () => {
   const [submissions, setSubmissions] = useState([]);
   const [currentPage, setCurrentPage] = useState(1);
-  const [submissionsPerPage] = useState(8);
+  const [submissionsPerPage] = useState(10);
   const [selectedSubmission, setSelectedSubmission] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -67,7 +67,7 @@ const AllSubmissions = () => {
             </pre>
             <div className="flex justify-end mt-4">
               <button
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-lg hover:bg-blue-700"
+                className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-lg hover:bg-blue-700"
                 onClick={() => setShowModal(false)}
               >
                 Close
@@ -102,11 +102,11 @@ const AllSubmissions = () => {
 
             <div className="overflow-x-auto border border-gray-300 shadow-sm rounded-lg">
               <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-200 text-gray-700">
+                <thead className="bg-gray-200 text-red-500">
                   <tr>
                     <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">ID</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">User ID</th>
-                    <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">Question ID</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">User Name</th>
+                    <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">Problem Title</th>
                     <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider border-r border-gray-300">Created At</th>
                     <th className="px-4 py-2 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
                   </tr>
@@ -123,7 +123,7 @@ const AllSubmissions = () => {
                         <td className="px-4 py-2 text-sm whitespace-nowrap">
                           <button
                             onClick={() => showCodeModal(submission)}
-                            className="bg-blue-500 text-white px-2 py-1 rounded hover:bg-blue-600 transition-colors"
+                            className="bg-red-500 text-white px-2 py-1 rounded hover:bg-red-600 transition-colors"
                           >
                             View Code
                           </button>
