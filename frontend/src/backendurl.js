@@ -1,1 +1,1 @@
-export const backendurl="http://localhost:8080"
+export const backendurl="https://codequest-1e4n.onrender.com"
