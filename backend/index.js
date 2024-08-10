@@ -38,4 +38,6 @@ app.use('/problem',problemRoutes);
 
 
 
-app.listen(port,()=>console.log("server is running at port : "+port))
+app.listen(port, '0.0.0.0', () => {
+    console.log(`Server is running on http://0.0.0.0:${port}`);
+  });
