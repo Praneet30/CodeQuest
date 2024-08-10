@@ -102,18 +102,36 @@ const Problems = () => {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Title</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Difficulty</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Company Tags</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Topic Tags</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Submissions</th>
-                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Action</th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Title
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Difficulty
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Company Tags
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Topic Tags
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Submissions
+                  </th>
+                  <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Action
+                  </th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
                 {filterProblems(problems).map((problem) => (
                   <tr key={problem._id} className="hover:bg-gray-100">
-                    <td className="px-4 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{problem.title}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm font-semibold font-medium text-gray-900">
+                      <Link
+                        to={`/problem/${problem._id}`}
+                      >
+                        {problem.title}
+                      </Link>
+                    </td>
                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       <span
                         className={`px-2 py-1 rounded-full text-xs font-semibold ${
@@ -129,19 +147,27 @@ const Problems = () => {
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       {problem.companyTags.slice(0, 3).map((company, index) => (
-                        <span key={index} className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs mr-1 mb-1 inline-block">
+                        <span
+                          key={index}
+                          className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-xs mr-1 mb-1 inline-block"
+                        >
                           {company}
                         </span>
                       ))}
                     </td>
                     <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
                       {problem.topicTags.slice(0, 3).map((topic, index) => (
-                        <span key={index} className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs mr-1 mb-1 inline-block">
+                        <span
+                          key={index}
+                          className="bg-blue-100 text-blue-800 px-2 py-1 rounded-full text-xs mr-1 mb-1 inline-block"
+                        >
                           {topic}
                         </span>
                       ))}
                     </td>
-                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">{problem.submissionsCount}</td>
+                    <td className="px-4 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {problem.submissionsCount}
+                    </td>
                     <td className="px-4 py-4 whitespace-nowrap text-sm font-medium">
                       <Link
                         to={`/problem/${problem._id}`}
