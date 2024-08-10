@@ -18,7 +18,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 // Serve uploaded files from the 'uploads' directory
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 
-const PORT = process.env.PORT || 5000
+const port = process.env.PORT || 5000
 
 console.log(process.env.MONGODB_URL)
 mongoose.set('strictQuery',false);
@@ -38,4 +38,4 @@ app.use('/problem',problemRoutes);
 
 
 
-app.listen(PORT,()=>console.log("server is running at port : "+PORT))
+app.listen(port,()=>console.log("server is running at port : "+port))
