@@ -46,7 +46,7 @@ const edit_user = async (req, res) => {
 const get_submissions=async (req,res)=>{
     try {
         const userId = req.params.id;
-        // console.log(userId);
+        console.log(userId);
         const submissions = await Submission.find({ userid: userId });
        
         let easyCount = 0;
