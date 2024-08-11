@@ -99,7 +99,7 @@ const addproblem_post = async (req, res) => {
   try {
     const { title, description, difficulty, constraints, inputFormat, outputFormat, sampleTestCases, topicTags, companyTags, userid } = req.body;
    
-
+    console.log(req.body);
    
     const newProblem = new Problem({
       userid,

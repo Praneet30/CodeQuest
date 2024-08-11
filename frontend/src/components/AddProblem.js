@@ -68,38 +68,24 @@ const AddProblem = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     let userid = authData.authData.user._id;
-    const formData = new FormData();
-    formData.append("title", problemData.title);
-    formData.append("description", problemData.description);
-    formData.append("difficulty", problemData.difficulty);
-    formData.append("constraints", problemData.constraints);
-    formData.append("inputFormat", problemData.inputFormat);
-    formData.append("outputFormat", problemData.outputFormat);
-
-    // Append sample test cases as an array
-    problemData.sampleTestCases.forEach((testCase, index) => {
-        formData.append(`sampleTestCases[${index}][input]`, testCase.input);
-        formData.append(`sampleTestCases[${index}][output]`, testCase.output);
-        formData.append(`sampleTestCases[${index}][explanation]`, testCase.explanation);
-    });
-
-    // Append topic tags as an array
-    problemData.topicTags.forEach((tag, index) => {
-        formData.append(`topicTags[${index}]`, tag);
-    });
-
-    // Append company tags as an array
-    problemData.companyTags.forEach((tag, index) => {
-        formData.append(`companyTags[${index}]`, tag);
-    });
-
     
-    formData.append("userid", userid);
+    const problemDataToSend = {
+        title: problemData.title,
+        description: problemData.description,
+        difficulty: problemData.difficulty,
+        constraints: problemData.constraints,
+        inputFormat: problemData.inputFormat,
+        outputFormat: problemData.outputFormat,
+        sampleTestCases: problemData.sampleTestCases,
+        topicTags: problemData.topicTags,
+        companyTags: problemData.companyTags,
+        userid: userid,
+    };
 
     try {
-        const response = await axios.post(`${backendurl}/problem/addproblem`, formData, {
+        const response = await axios.post(`${backendurl}/problem/addproblem`, problemDataToSend, {
             headers: {
-                "Content-Type": "multipart/form-data",
+                "Content-Type": "application/json",
             },
         });
         if (response.status === 201) {
@@ -113,8 +99,6 @@ const AddProblem = () => {
                 sampleTestCases: [{ input: "", output: "", explanation: "" }],
                 topicTags: [""],
                 companyTags: [""],
-                inputFile: null,
-                outputFile: null,
             });
             navigate("/admin");
         }
@@ -122,7 +106,6 @@ const AddProblem = () => {
         console.error("Error adding problem:", error);
     }
 };
-
 
   return (
     <>
